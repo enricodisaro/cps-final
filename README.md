@@ -1,4 +1,5 @@
 To compile the file server.c
+
 gcc server.c -o sw -lcrypto
 
 It requires a UNIX platform to work, and it need OpenSSL installed
