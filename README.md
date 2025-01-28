@@ -39,4 +39,4 @@ is arriving, the Serial buffer becomes overwhelmed and just gives up, and stops 
 To avoid this, there is a delay(1000) at one point in the code.
 
 
-There are a lot o pointers in this program. There are a lot of casts, too. (sorry)
+In order to work with single bytes at low level, there are a lot o pointers in this program. There are a lot of casts, too. (sorry)
