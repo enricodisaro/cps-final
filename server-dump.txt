@@ -1,0 +1,86 @@
+Server listening on port 8191...
+
+connected to client 192.168.68.68:50027
+RECEIVED M1 [8] = 56 56 34 34 78 56 34 12 
+deviceID = 34345656, sessionID = 12345678
+
+deviceID is valid! Quering the associated vault from database:
+key 0 = cb 3f 97 62 3d 46 7d 89 62 b9 88 30 62 f3 d6 b1 
+key 1 = d3 37 95 3e 63 4f 38 80 7e e3 c8 3b 39 a6 d4 be 
+key 2 = d3 3f 98 6d 34 43 25 d5 7a b4 c9 69 34 a8 c9 e6 
+key 3 = cc 3c 81 62 3d 4c 3e ca 61 b7 97 3e 21 a6 dc a5 
+key 4 = c4 39 80 61 69 16 24 df 27 e3 c8 3b 34 a8 89 ea 
+key 5 = 92 60 c3 61 39 43 7d d0 72 b3 c8 61 61 a9 cc a5 
+key 6 = c7 20 83 68 3f 16 21 8a 70 a9 c9 22 28 b8 c0 a9 
+key 7 = c4 39 95 3e 63 4f 7c d3 72 b8 99 39 30 aa 8f e6 
+key 8 = cb 39 85 6d 3b 53 2a d3 62 b0 8d 3b 24 a8 cc b9 
+key 9 = d3 3a 86 6a 3d 48 23 d4 79 b7 96 3c 3f af d7 be 
+
+
+
+-----Now create M2 and respond-----
+C1 was created = { 02 06 07 09 }
+r1 was generated = b6990db4
+M2 was sent [8 bytes] = 02 06 07 09 b4 0d 99 b6 
+
+
+
+-----Now prepare to receive M3 and process it-----
+M3 (encrypted) was received [32 bytes] = fc c0 b6 d6 47 55 87 8d 2c c3 6a 0d 73 fe 68 70 7f fd af 40 6f c8 2d 0f 52 bb 77 fb d3 74 e1 ef 
+k1 was computed = 03 1c 08 51 55 52 5b 58 01 12 0f 4e 13 15 51 17 
+M3 was decrypted [28 bytes] = b4 0d 99 b6 2d cf 46 29 04 b4 78 d8 68 a7 ff 3f 2b f1 fc d9 00 02 03 06 64 03 4a 47
+
+Now process the decrypted message
+Authenticate client: sent r1 = b6990db4, received r1 = b6990db4
+The two values of r1 match. Client authenticated correctly
+
+t1 = 2d cf 46 29 04 b4 78 d8 68 a7 ff 3f 2b f1 fc d9 
+C2 = { 00 02 03 06 }
+r2 = 474a0364
+
+
+
+-----Now create M4, cipher it and respond-----
+t2 was generated = d5 7c 23 cb e6 3e 05 04 60 de 1c 62 73 97 c1 86 
+PLAINTEXT M4 [20 bytes] = 64 03 4a 47 d5 7c 23 cb e6 3e 05 04 60 de 1c 62 73 97 c1 86 
+k2 was computed = 3e d3 4b 2c 0f eb 3f c4 61 b4 e0 7a 74 b4 ff 82 
+
+Use k2 to encrypt plaintext M4
+M4 CIPHERTEXT was sent [32 bytes] = a3 70 e7 5b 34 25 1a 3d c5 8c 92 1e fb 4d 78 c2 43 8f 5f 9f fc 5f 48 3a 42 7d 71 79 ab 76 d6 53 
+
+
+
+
+
+
+
+
+-----Authentication complete-----
+The SESSION KEY T was computed = f8 b3 65 e2 e2 8a 7d dc 08 79 e3 5d 58 66 3d 5f 
+
+
+Received a message from device
+IV = c4 af 15 28 a4 e9 57 db 5e 20 fb 38 a8 4e a6 14 
+Ciphertext [64 bytes] = ee 26 7a b2 89 99 8d b6 6a 43 fd 19 48 12 7 f4 d4 3e 33 c2 f5 e fb 5e 4a 80 ec a5 56 92 8 66 1a c2 75 3b 50 a8 b9 42 76 be ae c2 51 e9 1a 7d e5 cd 64 b 4f e1 4f 78 2e 88 a9 cd a2 7f 12 5 
+
+Decryption using SESSION KEY T
+Plaintext [64 bytes] = I am IoT device and can send messagges using key t, hi server :D
+
+SESSION CLOSED.
+
+-----Update the vault-----
+HMAC of the vault (with MD5) = 25 63 ef 55 b3 a6 b6 80 ed fb 76 a2 b0 bf 56 cb 
+New vault: 
+key 0 = ee 5c 78 37 8e e0 cb 09 8f 42 fe 92 d2 4c 80 7a
+key 1 = f6 54 7a 6b d0 e9 8e 00 93 18 be 99 89 19 82 74
+key 2 = f6 5c 77 38 87 e5 93 55 97 4f bf cb 84 17 9f 2f
+key 3 = e9 5f 6e 37 8e ea 88 4a 8c 4c e1 9c 91 19 8a 6d
+key 4 = e1 5a 6f 34 da b0 92 5f ca 18 be 99 84 17 df 25
+key 5 = b7 03 2c 34 8a e5 cb 50 9f 48 be c3 d1 16 9a 6b
+key 6 = e2 43 6c 3d 8c b0 97 0a 9d 52 bf 80 98 07 96 64
+key 7 = e1 5a 7a 6b d0 e9 ca 53 9f 43 ef 9b 80 15 d9 2a
+key 8 = ee 5a 6a 38 88 f5 9c 53 8f 4b fb 99 94 17 9a 7a
+key 9 = f6 59 69 3f 8e ee 95 54 94 4c e0 9e 8f 10 81 7c
+
+The new vault was pushed to the database!
+
