@@ -33,6 +33,9 @@ the vault.hex file, while for the ESP32 it's more complicated and you need to ac
 arduino sketch with the Preferences.h library.
 
 
+Note on randomness; the function arc4random() is considered pretty secure from the cryptographic point of view. The function random() for arduino is not,
+and its a lot more challenging to achieve strong randomness on such platform.
+
 
 After months of using it, I still have no idea how does the Serial.print() work. I think that if too much data
 is arriving, the Serial buffer becomes overwhelmed and just gives up, and stops printing anything.
