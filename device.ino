@@ -41,9 +41,10 @@ int create_challenge(uint8_t* array);
 
 //run this code once
 void setup() {
-
+  //the vault is saved as an array of bytes; each M bytes form a key
   char vault[N*M];              //buffer for the deciphered vault
   uint8_t crypto_vault[N*M];    //buffer for the ciphered version of the vault
+	
   uint8_t M1[M1_SIZE];
   uint8_t M2[M2_SIZE];
   char PM3[PM3_SIZE+4];  //plaintext M3; need to pad to a multiple of key size 
@@ -71,6 +72,8 @@ void setup() {
   if(!memory.getBytes("vault_bytes", crypto_vault, M*N)){
     //if the memory did not contain the vault, set it to default value
     Serial.println("(memory did not contain the vault... Setting to default value)");
+    //this string contains N*M charachters, which are the interpreted as a N keys of M bytes
+    //its the same string contained in the file vault.hex by default
     String v = "kldemc30vcsa01lbsdf93jv9j93jkdnmslkjdfklnn28fjs5loremipsumlosdfvdjsf93jf393jfj39230fif3ifi303kvvgspoo3o3ds2szzzzdjf93j2jfbbhbh55kjvjkvdjvjvjvjvjsiummmmmmmmmmmmm";
     for(int i = 0; i < N*M; i++) vault[i] = v[i];
   }
@@ -101,7 +104,7 @@ void setup() {
     Serial.printf("DeviceID = %08x, SessionID = %08x\n", buf[0], buf[1]);
     
     client.write(M1, M1_SIZE);
-
+    //the endianess of the system may makes it look like the bytes are in the wrong order, but they're not
     Serial.printf("M1 was sent = ");
     for(int i = 0; i < M1_SIZE; i++) Serial.printf("%02x ", M1[i]);
     Serial.printf("\n");
@@ -135,6 +138,7 @@ void setup() {
     //process M2 (it was plaintext)
     uint8_t* C1 = M2;
     uint32_t r1 = *((uint32_t*)(M2+P));
+	  
     Serial.printf("r1 = %02x\n", r1);
     Serial.printf("C1 = { ");
     for(char i = 0; i < P; i++){
@@ -197,6 +201,7 @@ void setup() {
     }
     Serial.println();
 
+		//add termination sequence
     M3[M3_SIZE] = '\r';
     M3[M3_SIZE+1] = '\n';
     client.write(M3, M3_SIZE+2);
@@ -252,7 +257,6 @@ void setup() {
     //decipher M4
     uint32_t iv2[4] = {*r2, *r2, *r2, *r2};
     int len = aes.decrypt((uint8_t*) M4, M4_SIZE, (uint8_t*) PM4, (uint8_t*) k2, MBITS, (uint8_t*) iv2);
-    //Serial.printf("len = %d, expected M4_SIZE = %d\n", len, M4_SIZE);
 
     Serial.printf("M4 was decrypted [%d bytes] = ", PM4_SIZE);
     for(int i = 0; i < PM4_SIZE; i++) Serial.printf("%02x ", PM4[i]);
@@ -265,7 +269,7 @@ void setup() {
     Serial.printf("Authenticate server: sent r2 = %x, received r2 = %x\n", *r2, *rec_r2);
     if(*r2 != *rec_r2){
       Serial.printf("FAILED TO AUTHENTICATE THE SERVER. ABORT\n\n");
-      //return 0;
+      //return 0; or something
     }
     else Serial.printf("The two values of r2 match. Server authenticated correctly\n\n");
 
@@ -322,7 +326,7 @@ void setup() {
     encr_msg[encr_len] = '\r';    //add terminators
     encr_msg[encr_len+1] = '\n';
     
-    client.write(encr_msg, encr_len+2);
+    client.write(encr_msg, encr_len+2);		//send the message
 
     Serial.printf("Sent a message to the server\nPlaintext [64 bytes] = %s\nIV = ", message);
     for(int i = 0; i < M; i++) Serial.printf("%x ", ivm_copy[i]);
@@ -376,8 +380,10 @@ void setup() {
     memory.putBytes("vault_bytes", crypto_vault, N*M);
     Serial.println("The new vault was saved in memory!");
 
+		//end
     
   } else {
+		//this else if related to the very first if, which tries to connect to the server
     Serial.println("Error during connection to the server.");
   }
 }
