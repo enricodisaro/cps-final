@@ -6,7 +6,7 @@ Reference report: https://www.overleaf.com/read/khwdffgksdpf#3a4618
 -------------------------------------
 To compile the file server.c
 
-gcc server.c -o sw -lcrypto
+gcc server.c -o sw -lcrypto -lssl
 
 It requires a UNIX platform to work, and it need OpenSSL installed
 
